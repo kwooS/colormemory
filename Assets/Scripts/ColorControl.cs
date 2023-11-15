@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class ColorControl : MonoBehaviour
 {
-    public GameObject screen;
+    public MeshRenderer screenMesh;
+    public TextMeshProUGUI text;
+    public int colorTime;
 
     private string[] order;
     private string[] digits;
@@ -51,5 +54,35 @@ public class ColorControl : MonoBehaviour
         //Debug.Log(hsvColor[2]);
 
         color = Color.HSVToRGB(hsvColor[0], hsvColor[1], hsvColor[2]);
+    }
+
+    public void proceed()
+    {
+        string digit = digits[idx];
+        int length = digit.Length;
+        StartCoroutine(StartDigitSpan(digit, length));
+        idx++;
+    }
+
+    IEnumerator StartDigitSpan(string digit, int length)
+    {
+        Color previous = screenMesh.material.color;
+        screenMesh.material.color = color;
+        yield return new WaitForSeconds((float)colorTime);
+
+        //Change screen color back to default
+        screenMesh.material.color = previous;
+
+        //Start Digit Span
+        for (int i = 0; i < length; i++)
+        {
+            text.text = digit[i].ToString();
+            yield return new WaitForSeconds(time);
+            text.text = "";
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        //Remove number
+        text.text = "";
     }
 }
