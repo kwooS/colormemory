@@ -5,8 +5,11 @@ using TMPro;
 
 public class ColorControl : MonoBehaviour
 {
+    //[HideInInspector]
     public MeshRenderer screenMesh;
+    //[HideInInspector]
     public TextMeshProUGUI text;
+
     public int colorTime;
 
     private string[] order;
@@ -17,12 +20,22 @@ public class ColorControl : MonoBehaviour
     private Color color;
     private float time;
 
-    private int idx=0;
+    private int idx = 0;
+    private int practiceIdx = 0;
+
+    private bool buttonLock = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        UpdateInformation();
+    }
+
+    public void UpdateInformation()
+    {
+        if (buttonLock) { return; }
         TestManager testManager = transform.GetComponent<TestManager>();
+        testManager.UpdateInformation();
         order = testManager.order;
         digits = testManager.digits;
         isPractice = testManager.isPractice;
@@ -30,11 +43,12 @@ public class ColorControl : MonoBehaviour
         {
             practice = testManager.practiceDigits;
         }
-        getColor(order[0]);
+        GetColor(order[0]);
         time = float.Parse(order[1]);
+        idx = 0;
     }
 
-    void getColor(string colorStr)
+    void GetColor(string colorStr)
     {
         Dictionary<string, float[]> possibleColors = new Dictionary<string, float[]>()
         {
@@ -56,8 +70,38 @@ public class ColorControl : MonoBehaviour
         color = Color.HSVToRGB(hsvColor[0], hsvColor[1], hsvColor[2]);
     }
 
-    public void proceed()
+    public void PracticeSession()
     {
+        if(buttonLock) { return; }
+        if(idx==0 & isPractice & practiceIdx < 3)
+        {
+            string digit = practice[practiceIdx];
+            int length = digit.Length;
+            StartCoroutine(StartPracticeSession(digit, length));
+            practiceIdx++;
+        }
+    }
+
+    IEnumerator StartPracticeSession(string digit, int length)
+    {
+        buttonLock = true;
+        //Start Digit Span
+        for (int i = 0; i < length; i++)
+        {
+            text.text = digit[i].ToString();
+            yield return new WaitForSeconds(1f);
+            text.text = "";
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        //Remove number
+        text.text = "";
+        buttonLock = false;
+    }
+
+    public void Proceed()
+    {
+        if (buttonLock){ return; }
         string digit = digits[idx];
         int length = digit.Length;
         StartCoroutine(StartDigitSpan(digit, length));
@@ -66,12 +110,13 @@ public class ColorControl : MonoBehaviour
 
     IEnumerator StartDigitSpan(string digit, int length)
     {
-        Color previous = screenMesh.material.color;
+        buttonLock = true;
+        Color defaultColor = screenMesh.material.color;
         screenMesh.material.color = color;
         yield return new WaitForSeconds((float)colorTime);
 
         //Change screen color back to default
-        screenMesh.material.color = previous;
+        screenMesh.material.color = defaultColor;
 
         //Start Digit Span
         for (int i = 0; i < length; i++)
@@ -84,5 +129,6 @@ public class ColorControl : MonoBehaviour
 
         //Remove number
         text.text = "";
+        buttonLock = false;
     }
 }

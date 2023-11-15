@@ -18,6 +18,15 @@ public class TestManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        //just in case you forget to uncheck
+        if (trialNo > 0)
+        {
+            isPractice = false;
+        }
+    }
+
+    public void UpdateInformation()
+    {
         string orderDir = dataDir + "\\order.csv";
         string digitDir = dataDir + "\\digits.csv";
 
@@ -28,13 +37,13 @@ public class TestManager : MonoBehaviour
         string digitStr = "";
         string practiceStr = "";
 
-        for(int i = 0; i < userNo+1; i++)
+        for (int i = 0; i < userNo + 1; i++)
         {
             orderStr = orderSR.ReadLine();
         }
         orderSR.Close();
 
-        for (int i = 0; i < userNo*4+trialNo + 1; i++)
+        for (int i = 0; i < userNo * 4 + trialNo + 1; i++)
         {
             digitStr = digitSR.ReadLine();
         }
