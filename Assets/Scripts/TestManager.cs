@@ -16,7 +16,7 @@ public class TestManager : MonoBehaviour
     public string[] practiceDigits;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         string orderDir = dataDir + "\\order.csv";
         string digitDir = dataDir + "\\digits.csv";
@@ -59,11 +59,5 @@ public class TestManager : MonoBehaviour
         order[0] = order[0][1..];
         order[1] = order[1][..^1];
         digits = digitStr.Split(',')[0..14];
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }
