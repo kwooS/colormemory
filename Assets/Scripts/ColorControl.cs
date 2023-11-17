@@ -6,7 +6,7 @@ using TMPro;
 public class ColorControl : MonoBehaviour
 {
     //[HideInInspector]
-    public MeshRenderer screenMesh;
+    public Material screenMat;
     //[HideInInspector]
     public TextMeshProUGUI text;
 
@@ -111,12 +111,12 @@ public class ColorControl : MonoBehaviour
     IEnumerator StartDigitSpan(string digit, int length)
     {
         buttonLock = true;
-        Color defaultColor = screenMesh.material.color;
-        screenMesh.material.color = color;
+        Color defaultColor = screenMat.color;
+        screenMat.color = color;
         yield return new WaitForSeconds((float)colorTime);
 
         //Change screen color back to default
-        screenMesh.material.color = defaultColor;
+        screenMat.color = defaultColor;
 
         //Start Digit Span
         for (int i = 0; i < length; i++)
