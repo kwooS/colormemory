@@ -6,8 +6,8 @@ using System.IO;
 public class TestManager : MonoBehaviour
 {
     public string dataDir = "C:\\Users\\HCI-TECH 07\\Desktop\\kw\\classes\\2023 fall\\인간공학\\project+paper\\final project\\ut scenes\\colormemory\\Assets\\Data";
-    public int userNo = 0;
-    public int trialNo = 0;
+    public int userNo = 1;
+    public int trialNo = 1;
     public bool isPractice = false;
     public int practiceIdx = 10;
 
@@ -19,7 +19,7 @@ public class TestManager : MonoBehaviour
     void Awake()
     {
         //just in case you forget to uncheck
-        if (trialNo > 0)
+        if (trialNo > 1)
         {
             isPractice = false;
         }
@@ -37,13 +37,13 @@ public class TestManager : MonoBehaviour
         string digitStr = "";
         string practiceStr = "";
 
-        for (int i = 0; i < userNo + 1; i++)
+        for (int i = 0; i < userNo; i++)
         {
             orderStr = orderSR.ReadLine();
         }
         orderSR.Close();
 
-        for (int i = 0; i < userNo * 4 + trialNo + 1; i++)
+        for (int i = 0; i < (userNo - 1) * 4 + trialNo; i++)
         {
             digitStr = digitSR.ReadLine();
         }
@@ -64,7 +64,7 @@ public class TestManager : MonoBehaviour
         Debug.Log(orderStr);
         Debug.Log(digitStr);
 
-        order = orderStr.Split(';')[trialNo].Split(",");
+        order = orderStr.Split(';')[trialNo-1].Split(",");
         order[0] = order[0][1..];
         order[1] = order[1][..^1];
         digits = digitStr.Split(',')[0..14];
